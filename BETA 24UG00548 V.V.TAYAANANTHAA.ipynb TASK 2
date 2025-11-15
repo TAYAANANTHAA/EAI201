@@ -1,0 +1,56 @@
+{
+  "metadata": {
+    "kernelspec": {
+      "name": "xpython",
+      "display_name": "Python 3.13 (XPython)",
+      "language": "python"
+    },
+    "language_info": {
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "version": "3.13.1"
+    }
+  },
+  "nbformat_minor": 5,
+  "nbformat": 4,
+  "cells": [
+    {
+      "id": "422d93d6-5b85-4273-8426-0e9e15fbf5d3",
+      "cell_type": "code",
+      "source": "import csv\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport joypy\nimport numpy as np\n\n\nfile_path = \"animals.csv\"  # replace with your CSV file path\n\ndata = []\nwith open(file_path, newline='', encoding='utf-8') as csvfile:\n    reader = csv.DictReader(csvfile)\n    for row in reader:\n        data.append(row)\n\n\nzoo_id = \"e1376402-910b-4b96-82fc-876d0d31d149\"\nclass_id = \"e1376402-910b-4b96-82fc-876d0d31d149\"\n\nfiltered_data = [\n    row for row in data if row.get('zoo') == zoo_id and row.get('class') == class_id\n]\n\n\nclass_counts = {}\nfor row in filtered_data:\n    cls = row['class']\n    class_counts[cls] = class_counts.get(cls, 0) + 1\n\nplt.figure(figsize=(8, 8))\nplt.pie(\n    list(class_counts.values()),\n    labels=list(class_counts.keys()),\n    autopct='%1.1f%%',\n    startangle=140,\n    colors=plt.cm.tab20.colors\n)\nplt.title(\"Class Distribution\")\nplt.show()\n\n\nfor row in filtered_data:\n    row['legs'] = int(row['legs'])\n\nlegs_data = {}\nfor row in filtered_data:\n    cls = row['class']\n    legs_data.setdefault(cls, []).append(row['legs'])\n\nplt.figure(figsize=(10,6))\njoypy.joyplot(legs_data, colormap=plt.cm.viridis, alpha=0.7)\nplt.title(\"Distribution of Legs by Class\")\nplt.show()\n\n\nhabitat_diet = {}\nfor row in filtered_data:\n    key = (row['habitat'], row['diet'])\n    habitat_diet[key] = habitat_diet.get(key, 0) + 1\n\nhabitats, diets, counts = [], [], []\nfor (habitat, diet), count in habitat_diet.items():\n    habitats.append(habitat)\n    diets.append(diet)\n    counts.append(count)\n\nplt.figure(figsize=(10,6))\nsns.barplot(x=habitats, y=counts, hue=diets, palette='Set2')\nplt.title(\"Habitat Types by Diet\")\nplt.xticks(rotation=45)\nplt.show()\n\n\nnumeric_cols = ['legs', 'fins']  # replace with your numeric columns\nnumeric_data = {col: [] for col in numeric_cols}\n\nfor row in filtered_data:\n    for col in numeric_cols:\n        numeric_data[col].append(float(row[col]))\n\ncorr_matrix = np.corrcoef([numeric_data[col] for col in numeric_cols])\nplt.figure(figsize=(8,6))\nsns.heatmap(\n    corr_matrix,\n    annot=True,\n    fmt=\".2f\",\n    xticklabels=numeric_cols,\n    yticklabels=numeric_cols,\n    cmap=\"coolwarm\",\n    linewidths=0.5\n)\nplt.title(\"Feature Correlation Heatmap\")\nplt.show()\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [
+        {
+          "name": "stderr",
+          "output_type": "stream",
+          "text": "Matplotlib is building the font cache; this may take a moment.\n"
+        },
+        {
+          "ename": "<class 'ModuleNotFoundError'>",
+          "evalue": "No module named 'seaborn'",
+          "traceback": [
+            "\u001b[31m---------------------------------------------------------------------------\u001b[39m",
+            "\u001b[31mModuleNotFoundError\u001b[39m                       Traceback (most recent call last)",
+            "\u001b[36mCell\u001b[39m\u001b[36m \u001b[39m\u001b[32mIn[1]\u001b[39m\u001b[32m, line 3\u001b[39m\n\u001b[32m      1\u001b[39m \u001b[38;5;28;01mimport\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[34;01mcsv\u001b[39;00m\n\u001b[32m      2\u001b[39m \u001b[38;5;28;01mimport\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[34;01mmatplotlib\u001b[39;00m\u001b[34;01m.\u001b[39;00m\u001b[34;01mpyplot\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[38;5;28;01mas\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[34;01mplt\u001b[39;00m\n\u001b[32m----> \u001b[39m\u001b[32m3\u001b[39m \u001b[38;5;28;01mimport\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[34;01mseaborn\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[38;5;28;01mas\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[34;01msns\u001b[39;00m\n\u001b[32m      4\u001b[39m \u001b[38;5;28;01mimport\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[34;01mjoypy\u001b[39;00m\n\u001b[32m      5\u001b[39m \u001b[38;5;28;01mimport\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[34;01mnumpy\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[38;5;28;01mas\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[34;01mnp\u001b[39;00m\n",
+            "\u001b[31mModuleNotFoundError\u001b[39m: No module named 'seaborn'"
+          ],
+          "output_type": "error"
+        }
+      ],
+      "execution_count": 1
+    },
+    {
+      "id": "343b1d64-6f95-49cb-9dcb-923f0dbf1ed5",
+      "cell_type": "code",
+      "source": "import csv\nimport numpy as np\nfrom itertools import combinations\n\n\nfile_path = \"animals.csv\"  # replace with your CSV path\ndata = []\nwith open(file_path, newline='', encoding='utf-8') as csvfile:\n    reader = csv.DictReader(csvfile)\n    for row in reader:\n        data.append(row)\n\n-\nclass_counts = {}\nfor row in data:\n    cls = row['class']\n    class_counts[cls] = class_counts.get(cls, 0) + 1\n\nlargest_class = max(class_counts.value\n",
+      "metadata": {
+        "trusted": true
+      },
+      "outputs": [],
+      "execution_count": null
+    }
+  ]
+}
